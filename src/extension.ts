@@ -23,7 +23,13 @@ export function activate(context: vscode.ExtensionContext) {
         var fullPath = getPath(args);
         var extName = path.extname(fullPath);
         var fileName = path.basename(fullPath, extName);
-        pasteAndShowMessage(fileName);
+        if (vscode.window.activeTextEditor.selection.isEmpty) {
+	  pasteAndShowMessage(fileName);
+        }
+        else {
+          const currentLine = vscode.window.activeTextEditor.selection.active.line + 1;
+          pasteAndShowMessage(fileName + ':' + currentLine);
+        }
     });
 
     context.subscriptions.push(disposable);
@@ -31,7 +37,13 @@ export function activate(context: vscode.ExtensionContext) {
     disposable = vscode.commands.registerCommand('copy-file-name.copyFileNameWithExtension', (...args) => {
         var fullPath = getPath(args);
         var fileName = path.basename(fullPath);
-        pasteAndShowMessage(fileName);
+	if (vscode.window.activeTextEditor.selection.isEmpty) {
+          pasteAndShowMessage(fileName);
+        }
+        else {
+          const currentLine = vscode.window.activeTextEditor.selection.active.line + 1;
+          pasteAndShowMessage(fileName + ':' + currentLine);
+        }
     });
 
     context.subscriptions.push(disposable);
